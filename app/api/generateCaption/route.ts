@@ -12,7 +12,10 @@ export async function POST(req: Request) {
     const meme = memes.find(m => m.id === memeId);
     if (!meme) {
       console.error('Meme not found:', memeId);
-      return new Response(JSON.stringify({ error: 'Meme template not found' }), {
+      return new Response(JSON.stringify({ 
+        error: 'Meme template not found',
+        details: `Could not find meme with ID: ${memeId}`
+      }), {
         status: 404,
       });
     }
@@ -39,7 +42,13 @@ export async function POST(req: Request) {
         console.log('Generated caption:', finalCaption);
       } catch (error) {
         console.error('Error generating caption with OpenAI:', error);
-        throw new Error('Failed to generate caption with AI');
+        return new Response(JSON.stringify({ 
+          error: 'Failed to generate caption with AI',
+          details: error instanceof Error ? error.message : 'OpenAI API error',
+          stack: error instanceof Error ? error.stack : undefined
+        }), {
+          status: 500,
+        });
       }
     } else {
       finalCaption = caption;
@@ -63,14 +72,23 @@ export async function POST(req: Request) {
       });
     } catch (error) {
       console.error('Error generating meme image:', error);
-      throw new Error('Failed to generate meme image');
+      return new Response(JSON.stringify({ 
+        error: 'Failed to generate meme image',
+        details: error instanceof Error ? error.message : 'Image generation error',
+        stack: error instanceof Error ? error.stack : undefined,
+        template: meme.template_url,
+        caption: finalCaption
+      }), {
+        status: 500,
+      });
     }
 
   } catch (error) {
     console.error('Error in generateCaption route:', error);
     return new Response(JSON.stringify({ 
       error: 'Failed to generate caption',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
     }), {
       status: 500,
     });

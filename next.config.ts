@@ -19,6 +19,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  outputFileTracingIncludes: {
+    "/api/generateCaption": ["./**"]
+  }
 }
 
 export default nextConfig;

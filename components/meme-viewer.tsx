@@ -69,11 +69,12 @@ export function MemeViewer({ meme }: MemeViewerProps) {
         body: JSON.stringify({ memeId: meme.id, prompt }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        throw new Error('Failed to generate caption');
+        throw new Error(data.details || data.error || 'Failed to generate caption');
       }
 
-      const data = await res.json();
       setCaption(data.caption);
       setGeneratedImageUrl(data.imageUrl);
       toast({
@@ -82,17 +83,13 @@ export function MemeViewer({ meme }: MemeViewerProps) {
       });
     } catch (error) {
       console.error('Error generating meme:', error);
-      let errorMessage = 'Failed to generate meme. Please try again.';
-      
-      if (error instanceof Response) {
-        const data = await error.json();
-        errorMessage = data.details || data.error || errorMessage;
-      }
+      let errorMessage = error instanceof Error ? error.message : 'Failed to generate meme. Please try again.';
       
       toast({
         title: 'Error',
         description: errorMessage,
         variant: 'destructive',
+        duration: 5000, // Show error for longer
       });
     } finally {
       setLoading(false);

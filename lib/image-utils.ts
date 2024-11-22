@@ -1,7 +1,18 @@
 import path from 'path';
 import {HorizontalAlign, VerticalAlign, Jimp, loadFont, measureText} from 'jimp';
-import {SANS_128_WHITE, SANS_64_WHITE, SANS_32_WHITE} from 'jimp/fonts';
+// import {SANS_128_WHITE, SANS_64_WHITE, SANS_32_WHITE} from 'jimp/fonts';
 import fs from 'fs';
+
+const plugin = require.resolve('jimp/fonts');
+const jimpFont = path.resolve(plugin, '../../fonts/open-sans/open-sans-32-black/open-sans-32-black.fnt');
+// SANS_128_WHITE // fonts/open-sans/open-sans-128-white/open-sans-128-white.fnt
+// resolve using a static string instead of using whatever jimp fonts gives at runtime
+// i copied exact fonts into my public/fonts with a directory containing fnt for each size and color
+// create variables for each font
+const SANS_32_WHITE = path.join(process.cwd(), 'public', 'fonts', 'open-sans-32-white', 'open-sans-32-white.fnt');
+const SANS_64_WHITE = path.join(process.cwd(), 'public', 'fonts', 'open-sans-64-white', 'open-sans-64-white.fnt');
+const SANS_128_WHITE = path.join(process.cwd(), 'public', 'fonts', 'open-sans-128-white', 'open-sans-128-white.fnt');
+
 
 export async function generateMemeImage(
   templateUrl: string, 
@@ -59,6 +70,9 @@ export async function generateMemeImage(
       finalFontSize = 64;
     }
 
+    // load impact font from public/fonts/impact.fnt
+    // const impactFont = await loadFont(path.join(process.cwd(), 'public', 'fonts', 'impact.fnt'));
+
     // Function to print wrapped text at a specific position
     const printWrappedText = (text: string, yPosition: number) => {
       if (!text) return;
@@ -91,6 +105,7 @@ export async function generateMemeImage(
         // const textWidth = measureText(font, line);
         image.print({
           font,
+          // font: impactFont,
           x: 0,
           y: Math.round(currentY),
           maxWidth: width,
@@ -99,6 +114,7 @@ export async function generateMemeImage(
             alignmentX: HorizontalAlign.CENTER,
             alignmentY: VerticalAlign.TOP,
           },
+
         });
         currentY += lineHeight;
       }
