@@ -96,6 +96,12 @@ export function MemeViewer({ meme }: MemeViewerProps) {
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && prompt.trim() && !loading) {
+      handleGenerateCaption();
+    }
+  };
+
   return (
     <div className="flex flex-col items-center gap-8 w-full max-w-xl mx-auto p-4">
       <Card className="w-full bg-gray-800 border border-gray-700">
@@ -128,6 +134,7 @@ export function MemeViewer({ meme }: MemeViewerProps) {
                 placeholder="Enter a prompt for the meme"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
+                onKeyDown={handleKeyPress}
                 className="flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
               />
               <Button 
