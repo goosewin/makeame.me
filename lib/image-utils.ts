@@ -79,7 +79,7 @@ export async function generateMemeImage(
       finalFontSize = 32;
     }
 
-    // Function to print wrapped text at a specific position
+    // Function to print wrapped text with background
     const printWrappedText = (text: string, yPosition: number) => {
       if (!text) return;
 
@@ -106,21 +106,41 @@ export async function generateMemeImage(
 
       let currentY = yPosition;
       const lineHeight = finalFontSize * 1.5;
+      const padding = finalFontSize * 0.3; // Padding around text
 
       for (const line of lines) {
-        // const textWidth = measureText(font, line);
+        const textWidth = measureText(font, line);
+        const boxWidth = textWidth + (padding * 2);
+        const boxX = Math.max(0, (width - boxWidth) / 2);
+        const boxHeight = finalFontSize + (padding * 2);
+
+        // Draw black background box
+        image.scan(
+          Math.round(boxX), 
+          Math.round(currentY), 
+          Math.round(boxWidth), 
+          Math.round(boxHeight), 
+          (x, y, idx) => {
+            image.bitmap.data[idx + 0] = 0;   // R
+            image.bitmap.data[idx + 1] = 0;   // G
+            image.bitmap.data[idx + 2] = 0;   // B
+            image.bitmap.data[idx + 3] = 100;  // A (more transparent, value between 0-255)
+          }
+        );
+
+        // Print text
         image.print({
           font,
           x: 0,
-          y: Math.round(currentY),
+          y: Math.round(currentY + padding),
           maxWidth: width,
           text: {
             text: line,
             alignmentX: HorizontalAlign.CENTER,
             alignmentY: VerticalAlign.TOP,
           },
-
         });
+
         currentY += lineHeight;
       }
     };
@@ -133,7 +153,6 @@ export async function generateMemeImage(
     // Print bottom text
     if (bottomText) {
       const lineHeight = finalFontSize * 1.5;
-      // const bottomWords = bottomText.split(' ');
       const estimatedLines = Math.ceil(measureText(font, bottomText) / (width - 60));
       const bottomY = height - (estimatedLines * lineHeight) - 30;
       printWrappedText(bottomText, bottomY);
