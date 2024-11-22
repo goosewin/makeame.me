@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 import memes from "../data/memes";
 import { ToastProvider } from "@/components/ui/toast";
 
-export default function MemePage({ params }: { params: { id: string } }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function MemePage({ params }: any) {
   const router = useRouter();
   const meme = memes.find((m) => m.id === params.id);
 

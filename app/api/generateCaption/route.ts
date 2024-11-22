@@ -43,7 +43,7 @@ export async function POST(req: Request) {
       meme.template_url,
       finalCaption,
       meme.id,
-      meme.textPosition
+      // meme.textPosition
     );
 
     // Return JSON response with caption and image URL
