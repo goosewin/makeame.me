@@ -20,7 +20,15 @@ const nextConfig: NextConfig = {
     ],
   },
   outputFileTracingIncludes: {
-    "/api/generateCaption": ["./**"]
+    "/api/generateCaption": ["./public/fonts/**/*"]
+  },
+  // Ensure static assets are copied to the build
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.(fnt|png)$/,
+      type: 'asset/resource'
+    });
+    return config;
   }
 }
 
