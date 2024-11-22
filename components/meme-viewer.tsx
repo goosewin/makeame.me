@@ -103,7 +103,7 @@ export function MemeViewer({ meme }: MemeViewerProps) {
           <Image
             className="rounded-lg object-contain w-full h-96"
             src={generatedImageUrl 
-              ? `${process.env.NEXT_PUBLIC_BLOB_URL}/${generatedImageUrl}.jpg`
+              ? generatedImageUrl
               : meme.template_url.replace('/public', '')}
             width={400}
             height={400}

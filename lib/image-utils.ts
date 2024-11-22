@@ -154,8 +154,8 @@ export async function generateMemeImage(
 
     console.log('Successfully uploaded image to Blob Storage:', url);
     
-    // Return the filename without extension for consistency with existing code
-    return `${memeId}-${timestamp}`;
+    // Return the full URL instead of just the filename
+    return url;
   } catch (error) {
     console.error('Error in generateMemeImage:', error);
     throw error;
