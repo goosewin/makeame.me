@@ -1,5 +1,6 @@
 import path from 'path';
 import {HorizontalAlign, VerticalAlign, Jimp, loadFont, measureText} from 'jimp';
+import { put } from '@vercel/blob';
 import fs from 'fs';
 
 // Helper function to ensure font path is valid
@@ -138,23 +139,23 @@ export async function generateMemeImage(
       printWrappedText(bottomText, bottomY);
     }
 
+    // Instead of saving to filesystem, save to buffer
+    const buffer = await image.getBuffer("image/jpeg");
+    
+    // Generate unique filename
     const timestamp = Date.now();
-    const newImagePath = `${memeId}-${timestamp}`;
-    const fullSavePath = path.join(process.cwd(), 'public', 'generated', newImagePath);
+    const filename = `${memeId}-${timestamp}.jpg`;
+
+    // Upload to Vercel Blob Storage
+    const { url } = await put(filename, buffer, {
+      access: 'public',
+      contentType: 'image/jpeg',
+    });
+
+    console.log('Successfully uploaded image to Blob Storage:', url);
     
-    // Ensure generated directory exists
-    try {
-      await fs.promises.mkdir(path.join(process.cwd(), 'public', 'generated'), { recursive: true });
-    } catch (error) {
-      console.error('Error creating generated directory:', error);
-      throw new Error('Failed to create generated directory');
-    }
-    
-    console.log('Saving generated image to:', fullSavePath);
-    await image.write(`${fullSavePath}.jpg`);
-    console.log('Successfully saved generated image');
-    
-    return newImagePath;
+    // Return the filename without extension for consistency with existing code
+    return `${memeId}-${timestamp}`;
   } catch (error) {
     console.error('Error in generateMemeImage:', error);
     throw error;
