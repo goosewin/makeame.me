@@ -6,7 +6,7 @@ export async function generateMemeImage(
   templateUrl: string, 
   caption: string, 
   memeId: string,
-  textPosition: 'top' | 'bottom' | 'both' = 'top'
+  // textPosition: 'top' | 'bottom' | 'both' = 'top'
 ): Promise<string> {
   try {
     const imagePath = path.join(process.cwd(), 'public', templateUrl.replace('/public', ''));
@@ -75,7 +75,7 @@ export async function generateMemeImage(
       const lineHeight = finalFontSize * 1.5;
 
       for (const line of lines) {
-        const textWidth = measureText(font, line);
+        // const textWidth = measureText(font, line);
         image.print({
           font,
           x: 0,
@@ -99,7 +99,7 @@ export async function generateMemeImage(
     // Print bottom text
     if (bottomText) {
       const lineHeight = finalFontSize * 1.5;
-      const bottomWords = bottomText.split(' ');
+      // const bottomWords = bottomText.split(' ');
       const estimatedLines = Math.ceil(measureText(font, bottomText) / (width - 60));
       const bottomY = height - (estimatedLines * lineHeight) - 30;
       printWrappedText(bottomText, bottomY);

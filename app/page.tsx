@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Image from "next/image";
 import Link from "next/link";
 import memes from "./data/memes";
-import { GithubIcon } from "lucide-react";
 
 export default function Home() {
   return (

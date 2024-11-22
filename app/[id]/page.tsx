@@ -5,7 +5,7 @@ import { MemeViewer } from "@/components/meme-viewer";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import memes from "../data/memes";
-import { Toast, ToastProvider } from "@/components/ui/toast";
+import { ToastProvider } from "@/components/ui/toast";
 
 export default function MemePage({ params }: { params: { id: string } }) {
   const router = useRouter();
