@@ -1,16 +1,29 @@
 import path from 'path';
 import {HorizontalAlign, VerticalAlign, Jimp, loadFont, measureText} from 'jimp';
 import {SANS_128_WHITE, SANS_64_WHITE, SANS_32_WHITE} from 'jimp/fonts';
+import fs from 'fs';
 
 export async function generateMemeImage(
   templateUrl: string, 
   caption: string, 
   memeId: string,
-  // textPosition: 'top' | 'bottom' | 'both' = 'top'
 ): Promise<string> {
   try {
+    console.log('Starting image generation with:', { templateUrl, caption, memeId });
+    
     const imagePath = path.join(process.cwd(), 'public', templateUrl.replace('/public', ''));
+    console.log('Resolved image path:', imagePath);
+    
+    // Check if file exists
+    try {
+      await fs.promises.access(imagePath);
+    } catch (error) {
+      console.error('Template file not found:', imagePath);
+      throw new Error(`Template file not found: ${templateUrl}`);
+    }
+
     const image = await Jimp.read(imagePath);
+    console.log('Successfully loaded template image');
     
     const width = image.bitmap.width;
     const height = image.bitmap.height;
@@ -109,11 +122,21 @@ export async function generateMemeImage(
     const newImagePath = `${memeId}-${timestamp}`;
     const fullSavePath = path.join(process.cwd(), 'public', 'generated', newImagePath);
     
+    // Ensure generated directory exists
+    try {
+      await fs.promises.mkdir(path.join(process.cwd(), 'public', 'generated'), { recursive: true });
+    } catch (error) {
+      console.error('Error creating generated directory:', error);
+      throw new Error('Failed to create generated directory');
+    }
+    
+    console.log('Saving generated image to:', fullSavePath);
     await image.write(`${fullSavePath}.jpg`);
+    console.log('Successfully saved generated image');
     
     return newImagePath;
   } catch (error) {
-    console.error('Error generating meme image:', error);
+    console.error('Error in generateMemeImage:', error);
     throw error;
   }
 } 

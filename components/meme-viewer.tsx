@@ -82,9 +82,16 @@ export function MemeViewer({ meme }: MemeViewerProps) {
       });
     } catch (error) {
       console.error('Error generating meme:', error);
+      let errorMessage = 'Failed to generate meme. Please try again.';
+      
+      if (error instanceof Response) {
+        const data = await error.json();
+        errorMessage = data.details || data.error || errorMessage;
+      }
+      
       toast({
         title: 'Error',
-        description: 'Failed to generate meme. Please try again.',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
