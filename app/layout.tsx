@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Link from "next/link";
+import { GithubIcon } from "lucide-react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,6 +31,21 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+
+      <footer className="row-start-3 flex flex-col gap-6 flex-wrap items-center justify-center">
+        <div>
+          made with ❤️ by dan goosewin
+        </div>
+        <div className="flex gap-2">
+          built at Vercel+Nvidia hackathon on 2024-11-21
+        </div>
+        <div className="flex flex-row gap-2">
+          <Link className="flex flex-row gap-2 items-center self-center justify-center" href="https://github.com/dan-goosewin/makeame.me">
+            <span>Source code</span>
+            <GithubIcon className="w-4 h-4" />
+          </Link>
+        </div>
+      </footer>
       </body>
     </html>
   );

@@ -3,6 +3,9 @@
 # scripts
 /scripts/venv/
 
+# generated images
+/public/generated/*
+
 # dependencies
 /node_modules
 /.pnp
